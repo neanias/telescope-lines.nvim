@@ -21,12 +21,6 @@ local function gather_lines()
   local formatted_lines = {}
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-  if options.hide_empty_lines then
-    lines = vim.tbl_filter(function(line)
-      return vim.trim(line) ~= ""
-    end, lines)
-  end
-
   for i, line in ipairs(lines) do
     local processed_line
 
@@ -41,6 +35,12 @@ local function gather_lines()
       line = processed_line,
       filepath = vim.api.nvim_buf_get_name(0),
     })
+  end
+
+  if options.hide_empty_lines then
+    lines = vim.tbl_filter(function(entry)
+      return vim.trim(entry.line) ~= ""
+    end, formatted_lines)
   end
 
   return formatted_lines
